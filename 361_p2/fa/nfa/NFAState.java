@@ -61,6 +61,10 @@ public class NFAState {
 		}
 		return delta.get(symb);
 	}
+
+	public String getName() {
+		return name;
+	}
 }
 
 

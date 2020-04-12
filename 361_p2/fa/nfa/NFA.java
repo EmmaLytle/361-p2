@@ -2,17 +2,21 @@ package fa.nfa;
 
 import java.util.Set;
 import fa.nfa.NFAState;
+import java.util.HashSet;
 import java.util.Queue;
 import fa.State;
+import fa.dfa.DFA;
 
 
 public class NFA implements NFAInterface{
 
-	private Set<NFAState> states;
+	private HashSet<NFAState> states;
 	private NFAState start;
-	private Set<NFAState> end;
-	private Set<Character> alphabet;
-	private Set<NFAState> trans;
+	private HashSet<NFAState> end;
+	private HashSet<Character> alphabet;
+	private HashSet<NFAState> trans;
+	private HashSet<NFAState> e_close;
+
 	
 	
 	public void addFinalState(String nextToken) {
@@ -109,7 +113,7 @@ public class NFA implements NFAInterface{
 	@Override
 	public State getStartState() {
 		// TODO Auto-generated method stub
-		return start;
+		return null;
 	}
 
 	@Override
