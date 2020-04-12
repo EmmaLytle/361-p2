@@ -72,11 +72,19 @@ public class NFA implements NFAInterface{
 		}
 		return ret;
 	}
-	public Set<NFAState> eClosure(NFAState s){
+		public Set<NFAState> eClosure(NFAState s){
 		//This method will take care of epsilon enclosures.
 		//implement using depth first search algorithm.
-		return states;//will probably return something else.
+		trans.add(s);
+		for (int i = 0; i <= states.size(); i++) {
 		
+			if(!e_close.contains(s)) {
+				trans.add(s);
+			}
+		}
+		
+		return e_close;
+
 	}
 	public DFA getDFA() {
 		// TODO Auto-generated method stub
