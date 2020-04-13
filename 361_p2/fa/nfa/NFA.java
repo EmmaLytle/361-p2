@@ -2,7 +2,10 @@ package fa.nfa;
 
 import java.util.Set;
 import fa.nfa.NFAState;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Queue;
 import fa.State;
 import fa.dfa.DFA;
@@ -10,33 +13,30 @@ import fa.dfa.DFA;
 
 public class NFA implements NFAInterface{
 
-	private HashSet<NFAState> states;
-	private NFAState start;
-	private HashSet<NFAState> end;
-	private HashSet<Character> alphabet;
-	private HashSet<NFAState> trans;
-	private HashSet<NFAState> e_close;
-
+	private LinkedHashSet<NFAState> states;
+	private LinkedHashSet<NFAState> e_close;
+	private NFAState startState; 
+	private Set<NFAState> finalState; 
+	private HashSet<Character> alphabet; // Sigma
+	private LinkedHashMap<String, NFAState> trans;
+	private ArrayList<NFAState> numStates;
 	
-
-	private NFAState startState; // added sk
-	private Set<NFAState> finalState; //added sk
-	
-	 public NFA() { // added sk
+	//Constructor
+	 public NFA() { 
 		   
          states = new LinkedHashSet<NFAState>();
-         sigma = new LinkedHashSet<Character>();
-         transitions = new LinkedHashMap<String, NFAState>();
-         finalStates = new LinkedHashSet<NFAState>();
-         numstates = new ArrayList<NFAState>();
+         alphabet = new LinkedHashSet<Character>(); // Sigma
+         trans = new LinkedHashMap<String, NFAState>();
+         finalState = new LinkedHashSet<NFAState>();
+         numStates = new ArrayList<NFAState>(); 
      }
 	 
 	public void addFinalState(String nextToken) {
-		// TODO Auto-generated method stub
+		
 		NFAState fs = checkIfExists(nextToken);
 		if(fs == null) {
 			fs = new NFAState(nextToken, true);
-			end.add(fs);
+			finalState.add(fs);
 			states.add(fs);
 		}else {
 			System.out.println("Error: this final state already exists.");
@@ -44,11 +44,11 @@ public class NFA implements NFAInterface{
 	}
 
 	public void addStartState(String startStateName) {
-		// TODO Auto-generated method stub
+	
 		NFAState s = checkIfExists(startStateName);
 		if(s == null) {
 			s = new NFAState(startStateName, true);
-			start = s;
+			startState = s;
 			states.add(s);
 		}else {
 			System.out.println("Error: this start state already exists.");
@@ -56,7 +56,7 @@ public class NFA implements NFAInterface{
 	}
 
 	public void addState(String nextToken) {
-		// TODO Auto-generated method stub
+		
 		NFAState s = checkIfExists(nextToken);
 		if( s == null){
 			states.add(new NFAState(nextToken, true));
@@ -65,12 +65,12 @@ public class NFA implements NFAInterface{
 		}
 	}
 
-		
 	
 	public void addTransition(String valueOf, char c, String valueOf2) {
-		// TODO Auto-generated method stub
+		//TODO 
 		alphabet.add(c);
 		//Hash put Tuple
+		//trans.put(new NFAState(valueOf, true), c), new NFAState(valueOf2, true);
 	}
 	
 	/**
@@ -88,14 +88,16 @@ public class NFA implements NFAInterface{
 		}
 		return ret;
 	}
-		public Set<NFAState> eClosure(NFAState s){
+		
+	public Set<NFAState> eClosure(NFAState s){
 		//This method will take care of epsilon enclosures.
 		//implement using depth first search algorithm.
-		trans.add(s);
+
+		trans.add(s); // You can't add you have to put because it is a map 
 		for (int i = 0; i <= states.size(); i++) {
 		
 			if(!e_close.contains(s)) {
-				trans.add(s);
+				trans.add(s);// Same comment as above you need to put not add 
 			}
 		}
 		
@@ -106,14 +108,14 @@ public class NFA implements NFAInterface{
 		// TODO Auto-generated method stub
 		
 		 // Must implement the breadth first search algorithm.
-		 
-		return DFA; //sk
+		return null;
+		//return DFA; //sk
 	}
 
 	@Override
 	public Set<? extends State> getStates() {
 		// TODO Auto-generated method stub
-		return state; //?? Possible cast?? //sk
+		return  states; // ?? Possible cast?? //sk
 	}
 
 	@Override
@@ -130,7 +132,6 @@ public class NFA implements NFAInterface{
 
 	@Override
 	public Set<Character> getABC() {
-		// TODO Auto-generated method stub
 		return alphabet;
 	}
 
@@ -139,10 +140,11 @@ public class NFA implements NFAInterface{
 		// TODO Auto-generated method stub
 		return toState; //sk
 	}
-public String transitionTable(){ added sk
+
+	public String transitionTable(){ 
 		
 		String transitionTable = "	";
-		char[][] matrix = new char[numstates.size()+1][sigma.size()+1];
+		char[][] matrix = new char[numStates.size()+1][alphabet.size()+1];
 		StringBuilder bldmatrix = new StringBuilder();
 		
 		for(int i = 0; i < matrix.length; i++) {
@@ -151,17 +153,18 @@ public String transitionTable(){ added sk
 					if (j == 0) {
 					matrix[i][j] = ' ';
 					} else {
-						ArrayList<Character> trans = new ArrayList<>(sigma);
+						ArrayList<Character> trans = new ArrayList<>(alphabet);
 							matrix[i][j] = trans.get(j-1);
 					}
 				} else {
 					if (j == 0) {
-						matrix[i][j] =  numstates.get(i-1).getName().charAt(0);
+						matrix[i][j] =  numStates.get(i-1).getName().charAt(0);
 						
 					} else {
 
-						ArrayList<Character> trans2 = new ArrayList<>(sigma);
-						matrix[i][j] = getToState(numstates.get(i-1), trans2.get(j-1)).getName().charAt(0);
+						ArrayList<Character> trans2 = new ArrayList<>(alphabet);
+						matrix[i][j] = ((NFAState) getToState(numStates.get(i - 1), trans2.get(j - 1))).getName()
+								.charAt(0);
 					}
 				}
 			}
@@ -190,12 +193,12 @@ public String transitionTable(){ added sk
 		for (State states: states) {
 			sb.append(states.getName() + " ");
 		}
-		for (State finalstates: finalStates) {
+		for (State finalstates: finalState) {
 			sb.append(finalstates.getName() + " ");
 		}
 		sb.append("}\n");
 		sb.append("Sigma = { ");
-		for (Character sigmas: sigma) {
+		for (Character sigmas: alphabet) {
 			sb.append(sigmas + " ");
 		}
 		sb.append("}\n");
@@ -203,7 +206,7 @@ public String transitionTable(){ added sk
 		sb.append(transitionTable());
 		sb.append("q0 = " + getStartState().getName()+"\n");
 		sb.append("F = { ");
-		for (State finalstates: finalStates) {
+		for (State finalstates: finalState) {
 			sb.append(finalstates.getName() + " ");
 		}
 		sb.append("}");
@@ -211,5 +214,5 @@ public String transitionTable(){ added sk
         return sb.toString();
         
 	}
-
+ 
 }
