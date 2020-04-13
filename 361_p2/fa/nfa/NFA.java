@@ -15,10 +15,10 @@ public class NFA implements NFAInterface{
 
 	private LinkedHashSet<NFAState> states;
 	private LinkedHashSet<NFAState> e_close;
-	private NFAState startState; 
+	private NFAState startState;  
 	private Set<NFAState> finalState; 
 	private HashSet<Character> alphabet; // Sigma
-	private LinkedHashMap<String, NFAState> trans;
+	private LinkedHashMap<String, NFAState> trans;// Did we want this to be a map? how do we put things on the map? 
 	private ArrayList<NFAState> numStates;
 	
 	//Constructor
@@ -94,6 +94,7 @@ public class NFA implements NFAInterface{
 		//implement using depth first search algorithm.
 
 		trans.add(s); // You can't add you have to put because it is a map 
+		//trans.put(key, s);//what is key? 
 		for (int i = 0; i <= states.size(); i++) {
 		
 			if(!e_close.contains(s)) {
@@ -114,20 +115,17 @@ public class NFA implements NFAInterface{
 
 	@Override
 	public Set<? extends State> getStates() {
-		// TODO Auto-generated method stub
-		return  states; // ?? Possible cast?? //sk
+		return states; 
 	}
 
 	@Override
 	public Set<? extends State> getFinalStates() {
-		// TODO Auto-generated method stub
 		return finalState; //sk
 	}
 
 	@Override
 	public State getStartState() {
-		// TODO Auto-generated method stub
-		return startState; ; //sk
+		return startState;  //sk
 	}
 
 	@Override

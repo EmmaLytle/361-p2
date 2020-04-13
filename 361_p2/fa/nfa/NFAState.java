@@ -7,9 +7,10 @@ package fa.nfa;
 
 import java.util.HashMap;
 
+import fa.State;
 import fa.nfa.NFAState;
 
-public class NFAState {
+public class NFAState extends State {
 	private HashMap<Character,NFAState> delta;//delta
 	private boolean isFinal;//remembers its type
 	private String name;
