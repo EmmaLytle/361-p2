@@ -136,7 +136,18 @@ public class NFA implements NFAInterface{
 	@Override
 	public Set<NFAState> getToState(NFAState from, char onSymb) {
 		// TODO Auto-generated method stub
-		return toState; //sk
+		
+		//Idea from the last project. 
+		if(alphabet.contains(onSymb))
+		{	
+			return (Set<NFAState>) trans.get(from);
+		}
+		else{
+			return (Set<NFAState>) from;
+		}
+		
+		
+		//return toState; //sk
 	}
 
 	public String transitionTable(){ 
