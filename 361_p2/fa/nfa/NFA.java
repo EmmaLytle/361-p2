@@ -84,46 +84,49 @@ public class NFA implements NFAInterface{
 	@Override
 	public DFA getDFA() {
 		// Must implement the breadth first search algorithm.
-
-		DFA d = new DFA();
-
-		NFAState t;
 		ArrayList<NFAState> visited2 = new ArrayList<NFAState>();
-		
-		Queue<NFAState> queue = new LinkedList<NFAState>();
-		queue.add(startState);
-		d.addStartState(startState.getName());
+		Queue<NFAState> workQueue = new LinkedList<NFAState>();
+		NFAState t;
+
+		DFA d = new DFA();  //Step 1.  https://www.javatpoint.com/automata-conversion-from-nfa-to-dfa
+
+		d.addStartState(startState.getName());  //Step 2.
+		workQueue.add(startState);
+	
 		visited2.add(startState);
-
-		while(queue.size() != 0)
+		while(workQueue.size() != 0)
 		{
-			t = queue.poll(); 
-			if(t.isFinal())
-			{
-				d.addFinalState(t.getName());
-			}
-			
-			d.addState(t.getName());
-
-//Guessing...  How to add transitions?.  Formatting? 
-			HashMap<Character,HashSet<NFAState>> temp = t.getTrans();
-			for (Character c : temp.keySet()) {
-
-				HashSet<NFAState> delta = temp.get(c);
-
-				if(delta.size() > 1)
-				{
-					ArrayList<String> cn = new ArrayList<String>();
-					for (NFAState nfaState : delta) {
-						cn.add(nfaState.getName());
+			t = workQueue.poll(); //current workItem.
+			String fromState = t.getName();
+			//Find Transitions from this state.  If set of states not in DFA, Add
+			//Step 3.  For each symbol
+			HashMap<Character,HashSet<NFAState>> transitions = t.getTrans();
+			for (Character symb : transitions.keySet()) {
+				
+				HashSet<NFAState> delta = transitions.get(symb);
+				boolean containsFinalState = false;
+				ArrayList<String> cn = new ArrayList<String>();
+				for (NFAState ns : delta) {
+					if(ns.isFinal()){
+						containsFinalState = true;
 					}
-					d.addState(String.join(",", cn));	
+					cn.add(ns.getName());
 				}
+				String toState = String.join(",",cn);
+				if(containsFinalState){
+					d.addFinalState(toState);
+				}else{
 
+					d.addState(toState);
+				}	
+				
+				//d.addTransition(fromState, symb, toState);  //1, a, 2,1
+				//d.addTransition(toState, symb, toState);  //2,1, a , 2,1
+
+				//Add each state to the workQueue
 				for (NFAState nfaState : delta) {
-					
 					if(!visited2.contains(nfaState))	{
-						queue.add(nfaState);
+						workQueue.add(nfaState);
 						visited2.add(nfaState);
 					}
 				}	
@@ -135,47 +138,6 @@ public class NFA implements NFAInterface{
 		return d;
 	}
 	
-	// // prints BFS traversal from a given source s 
-	// void BFS(int s) 
-	// { 
-	// 	// Mark all the vertices as not visited(By default 
-	// 	// set as false) 
-	// 	boolean visited[] = new boolean[V]; 
-
-	// 	// Create a queue for BFS 
-	// 	LinkedList<Integer> queue = new LinkedList<Integer>(); 
-
-	// 	// Mark the current node as visited and enqueue it 
-	// 	visited[s]=true; 
-	// 	queue.add(s); 
-
-	// 	while (queue.size() != 0) 
-	// 	{ 
-	// 		// Dequeue a vertex from queue and print it 
-	// 		s = queue.poll(); 
-	// 		System.out.print(s+" "); 
-
-	// 		// Get all adjacent vertices of the dequeued vertex s 
-	// 		// If a adjacent has not been visited, then mark it 
-	// 		// visited and enqueue it 
-	// 		Iterator<Integer> i = adj[s].listIterator(); 
-	// 		while (i.hasNext()) 
-	// 		{ 
-	// 			int n = i.next(); 
-	// 			if (!visited[n]) 
-	// 			{ 
-	// 				visited[n] = true; 
-	// 				queue.add(n); 
-	// 			} 
-	// 		} 
-	// 	} 
-	// } 
-
-
-
-
-
-
 
 	@Override
 	public Set<NFAState> getToState(NFAState from, char onSymb) {
