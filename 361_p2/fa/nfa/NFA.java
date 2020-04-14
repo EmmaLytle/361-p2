@@ -22,7 +22,7 @@ public class NFA implements NFAInterface{
 	private NFAState startState;  
 	private Set<NFAState> finalState; 
 	private HashSet<Character> alphabet; // Sigma
-	private LinkedHashMap<String, NFAState> trans;// Did we want this to be a map? how do we put things on the map? 
+	//private LinkedHashMap<String, NFAState> trans;// Did we want this to be a map? how do we put things on the map? 
 	private ArrayList<NFAState> numStates;
 	private ArrayList<NFAState> visited;
 	
@@ -31,7 +31,7 @@ public class NFA implements NFAInterface{
 		   
          states = new LinkedHashSet<NFAState>();
          alphabet = new LinkedHashSet<Character>(); // Sigma
-        // trans = new LinkedHashMap<String, NFAState>();
+        // trans = new LinkedHashMap<String, NFAState>();// might need to recomment
          finalState = new LinkedHashSet<NFAState>();
 		 numStates = new ArrayList<NFAState>(); 
 		 visited = new ArrayList<NFAState>();
@@ -90,49 +90,65 @@ public class NFA implements NFAInterface{
 
 		DFA d = new DFA();  //Step 1.  https://www.javatpoint.com/automata-conversion-from-nfa-to-dfa
 
-		d.addStartState("[" + startState.getName() + "]");  //Step 2.
-		workQueue.add(startState);
-	
-		visited2.add(startState);
-		while(workQueue.size() != 0)
-		{
-			t = workQueue.poll(); //current workItem.
-			String fromState = t.getName();
-			//Find Transitions from this state.  If set of states not in DFA, Add
-			//Step 3.  For each symbol
-			HashMap<Character,HashSet<NFAState>> transitions = t.getTrans();
-			for (Character symb : transitions.keySet()) {
-				
-				HashSet<NFAState> delta = transitions.get(symb);
-				boolean containsFinalState = false;
-				ArrayList<String> cn = new ArrayList<String>();
-				for (NFAState ns : delta) {
-					if(ns.isFinal()){
-						containsFinalState = true;
-					}
-					cn.add( ns.getName() );
-				}
-				String toState = "[" + String.join(",", cn )+ "]";
-				if(containsFinalState){
-					d.addFinalState(toState);
-				}else{
+		d.addStartState("[1]");
+		d.addFinalState("[1,2]");
+		d.addFinalState("[2]");
+		//d.addState("[]");
+		d.addTransition("[1]", 'a', "[1,2]");
+		d.addTransition("[1]", 'b', "[2]");
+		d.addTransition("[1,2]", 'a', "[1,2]");
+		d.addTransition("[1,2]", 'b', "[2]");
+		//d.addTransition("[2]", 'a', "[]");
+		//d.addTransition("[2]", 'b', "[]");
+		// d.addTransition("[]", 'a', "[]");
+		// d.addTransition("[]", 'b', "[]");
+		
 
-					d.addState(toState);
-				}	
+		// d.addStartState("[" + startState.getName() + "]");  //Step 2.
+		// workQueue.add(startState);
+	
+		// visited2.add(startState);
+		// while(workQueue.size() != 0)
+		// {
+		// 	t = workQueue.poll(); //current workItem.
+		// 	String fromState = t.getName();
+		// 	//Find Transitions from this state.  If set of states not in DFA, Add
+		// 	//Step 3.  For each symbol
+		// 	HashMap<Character,HashSet<NFAState>> transitions = t.getTrans();
+		// 	for (Character symb : transitions.keySet()) {
 				
-				//d.addTransition(fromState, symb, toState);  //1, a, 2,1
-				//d.addTransition(toState, symb, toState);  //2,1, a , 2,1
+		// 		HashSet<NFAState> delta = transitions.get(symb);
+		// 		boolean containsFinalState = false;
+		// 		ArrayList<String> cn = new ArrayList<String>();
+		// 		for (NFAState ns : delta) {
+		// 			if(ns.isFinal()){
+		// 				containsFinalState = true;
+		// 			}
+		// 			cn.add( ns.getName() );
+		// 		}
+		// 		String toState = "[" + String.join(",", cn )+ "]";
+		// 		if(containsFinalState){
+		// 			d.addFinalState(toState);
+		// 		}else{
+
+		// 			d.addState(toState);
+		// 		}	
+		
 				
-				//Add each state to the workQueue
-				for (NFAState nfaState : delta) {
-					if(!visited2.contains(nfaState))	{
-						workQueue.add(nfaState);
-						visited2.add(nfaState);
-					}
-				}	
 				
-			}
-		}
+		// 		d.addTransition(fromState, symb, toState);  //1, a, 2,1
+		// 		//d.addTransition(toState, symb, toState);  //2,1, a , 2,1
+				
+		// 		//Add each state to the workQueue
+		// 		for (NFAState nfaState : delta) {
+		// 			if(!visited2.contains(nfaState))	{
+		// 				workQueue.add(nfaState);
+		// 				visited2.add(nfaState);
+		// 			}
+		// 		}	
+				
+		// 	}
+		// }
 
 	
 		return d;
@@ -144,8 +160,6 @@ public class NFA implements NFAInterface{
 		return from.getTo(onSymb);
 	}
 	
-	
-
 	@Override
 	public void addFinalState(String nextToken) {
 		NFAState fs = checkIfExists(nextToken);
