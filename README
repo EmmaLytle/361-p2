@@ -1,0 +1,41 @@
+# CS 361: Project 2 (Nondeterministic Finite Automata)
+
+* Author: Irene Grace
+		: Emma Lyte
+*		: Shinji Kasai
+* Class : CS361 Section 2
+* Semester: Spring 2020
+
+## Overview
+
+This Java project you will implement a Java program that models a deterministic finite automaton.
+
+
+## Compiling and Using
+
+To compile, execute the following command in the main project directory:
+```
+$ javac fa.nfa.NFADriver
+```
+
+Run the compiled class with the command:
+```
+$ java fa.nfa.NFADriver ./tests/[testfiles]
+
+Testfiles:
+p2tc1.txt
+p2tc2.txt
+p2tc3.txt
+```
+
+## Discussion
+We implimented some of the methods exactly we did in DFA. For this project, we had a good start 
+communicating with teamates. We walked throw the project and methods to make sure everyone understand
+what methods we need to create, and what methods we could bring from the last DFA project. After 
+that we assigned ourselves to methods we have to complete. 
+We had a difficulty working on getDFA() methods that returns a DFA identical to the 
+current NFA. We spent time figuring out what we need and how to form the methods. 
+
+## Sources used
+https://www.geeksforgeeks.org/hashtable-in-java/
+https://www.w3schools.com/java/java_hashmap.asp
