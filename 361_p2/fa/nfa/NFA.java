@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import fa.State;
 import fa.dfa.DFA;
@@ -82,13 +83,12 @@ public class NFA implements NFAInterface{
 	
 	@Override
 	public DFA getDFA() {
+		// Must implement the breadth first search algorithm.
 
 		DFA d = new DFA();
 
-		// Must implement the breadth first search algorithm.
 		NFAState t;
 		ArrayList<NFAState> visited2 = new ArrayList<NFAState>();
-		ArrayList<HashSet<NFAState>> DFAStates = new ArrayList<HashSet<NFAState>>();
 		
 		Queue<NFAState> queue = new LinkedList<NFAState>();
 		queue.add(startState);
@@ -105,29 +105,34 @@ public class NFA implements NFAInterface{
 			
 			d.addState(t.getName());
 
-
+//Guessing...  How to add transitions?.  Formatting? 
 			HashMap<Character,HashSet<NFAState>> temp = t.getTrans();
 			for (Character c : temp.keySet()) {
 
-				String comboState = "";
+				HashSet<NFAState> delta = temp.get(c);
 
-				for (NFAState nfaState : temp.get(c)) {
-					comboState += nfaState.getName() + ", ";
+				if(delta.size() > 1)
+				{
+					ArrayList<String> cn = new ArrayList<String>();
+					for (NFAState nfaState : delta) {
+						cn.add(nfaState.getName());
+					}
+					d.addState(String.join(",", cn));	
+				}
+
+				for (NFAState nfaState : delta) {
 					
 					if(!visited2.contains(nfaState))	{
 						queue.add(nfaState);
+						visited2.add(nfaState);
 					}
 				}	
-				d.addState(comboState);	
-					
+
 			}
 		}
 
-		
-		
 	
 		return d;
-		//return DFA; //sk
 	}
 	
 	// // prints BFS traversal from a given source s 
