@@ -3,6 +3,7 @@ package fa.nfa;
 import java.util.Set;
 import fa.nfa.NFAState;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -22,19 +23,164 @@ public class NFA implements NFAInterface{
 	private HashSet<Character> alphabet; // Sigma
 	private LinkedHashMap<String, NFAState> trans;// Did we want this to be a map? how do we put things on the map? 
 	private ArrayList<NFAState> numStates;
+	private ArrayList<NFAState> visited;
 	
 	//Constructor
 	 public NFA() { 
 		   
          states = new LinkedHashSet<NFAState>();
          alphabet = new LinkedHashSet<Character>(); // Sigma
-         trans = new LinkedHashMap<String, NFAState>();
+        // trans = new LinkedHashMap<String, NFAState>();
          finalState = new LinkedHashSet<NFAState>();
-         numStates = new ArrayList<NFAState>(); 
+		 numStates = new ArrayList<NFAState>(); 
+		 visited = new ArrayList<NFAState>();
+		 e_close = new LinkedHashSet<NFAState>();
      }
-	 
-	public void addFinalState(String nextToken) {
+	
+    
+	@Override
+	public void addTransition(String fromState, char onSymb, String toState) {
+		NFAState from = checkIfExists(fromState);
+		NFAState to = checkIfExists(toState);
+		if(from == null){
+			System.err.println("ERROR: No DFA state exists with name " + fromState);
+			System.exit(2);
+		} else if (to == null){
+			System.err.println("ERROR: No DFA state exists with name " + toState);
+			System.exit(2);
+		}
+
+		from.addTrans(onSymb, to);
+
+		if(!alphabet.contains(onSymb)){
+			alphabet.add(onSymb);
+		}
+
+	}
+	
+	@Override
+	public Set<NFAState> eClosure(NFAState s){
+		//This method will take care of epsilon enclosures.
+		//implement using depth first search algorithm.
+
+		visited.add(s);
+		HashMap<Character,HashSet<NFAState>> temp = s.getTrans();
+		for (Character c : temp.keySet()) {
+			if(c == 'e'){
+				e_close.add(s);	
+			}	
+			for (NFAState nfaState : temp.get(c)) {
+				if(!visited.contains(nfaState))	{
+					eClosure(nfaState);
+				}
+			}			
+		}
+		return e_close;
+	}
+
+
+	
+	@Override
+	public DFA getDFA() {
+
+		DFA d = new DFA();
+
+		// Must implement the breadth first search algorithm.
+		NFAState t;
+		ArrayList<NFAState> visited2 = new ArrayList<NFAState>();
+		ArrayList<HashSet<NFAState>> DFAStates = new ArrayList<HashSet<NFAState>>();
 		
+		Queue<NFAState> queue = new LinkedList<NFAState>();
+		queue.add(startState);
+		d.addStartState(startState.getName());
+		visited2.add(startState);
+
+		while(queue.size() != 0)
+		{
+			t = queue.poll(); 
+			if(t.isFinal())
+			{
+				d.addFinalState(t.getName());
+			}
+			
+			d.addState(t.getName());
+
+
+			HashMap<Character,HashSet<NFAState>> temp = t.getTrans();
+			for (Character c : temp.keySet()) {
+
+				String comboState = "";
+
+				for (NFAState nfaState : temp.get(c)) {
+					comboState += nfaState.getName() + ", ";
+					
+					if(!visited2.contains(nfaState))	{
+						queue.add(nfaState);
+					}
+				}	
+				d.addState(comboState);	
+					
+			}
+		}
+
+		
+		
+	
+		return d;
+		//return DFA; //sk
+	}
+	
+	// // prints BFS traversal from a given source s 
+	// void BFS(int s) 
+	// { 
+	// 	// Mark all the vertices as not visited(By default 
+	// 	// set as false) 
+	// 	boolean visited[] = new boolean[V]; 
+
+	// 	// Create a queue for BFS 
+	// 	LinkedList<Integer> queue = new LinkedList<Integer>(); 
+
+	// 	// Mark the current node as visited and enqueue it 
+	// 	visited[s]=true; 
+	// 	queue.add(s); 
+
+	// 	while (queue.size() != 0) 
+	// 	{ 
+	// 		// Dequeue a vertex from queue and print it 
+	// 		s = queue.poll(); 
+	// 		System.out.print(s+" "); 
+
+	// 		// Get all adjacent vertices of the dequeued vertex s 
+	// 		// If a adjacent has not been visited, then mark it 
+	// 		// visited and enqueue it 
+	// 		Iterator<Integer> i = adj[s].listIterator(); 
+	// 		while (i.hasNext()) 
+	// 		{ 
+	// 			int n = i.next(); 
+	// 			if (!visited[n]) 
+	// 			{ 
+	// 				visited[n] = true; 
+	// 				queue.add(n); 
+	// 			} 
+	// 		} 
+	// 	} 
+	// } 
+
+
+
+
+
+
+
+	@Override
+	public Set<NFAState> getToState(NFAState from, char onSymb) {
+		return from.getTo(onSymb);
+	}
+	
+	
+
+	@Override
+	public void addFinalState(String nextToken) {
 		NFAState fs = checkIfExists(nextToken);
 		if(fs == null) {
 			fs = new NFAState(nextToken, true);
@@ -44,38 +190,44 @@ public class NFA implements NFAInterface{
 			System.out.println("Error: this final state already exists.");
 		}
 	}
-
+	@Override
 	public void addStartState(String startStateName) {
-	
 		NFAState s = checkIfExists(startStateName);
 		if(s == null) {
-			s = new NFAState(startStateName, true);
+			s = new NFAState(startStateName);
 			startState = s;
 			states.add(s);
 		}else {
 			System.out.println("Error: this start state already exists.");
 		}
 	}
-
+	@Override
 	public void addState(String nextToken) {
-		
 		NFAState s = checkIfExists(nextToken);
 		if( s == null){
-			states.add(new NFAState(nextToken, true));
+			states.add(new NFAState(nextToken));
 		} else {
 			System.out.println("Error: this state already exists.");
 		}
 	}
-
-	
-	public void addTransition(String valueOf, char c, String valueOf2) {
-		//TODO 
-		alphabet.add(c);
-		//Hash put Tuple
-		//trans.put(new NFAState(valueOf, true), c), new NFAState(valueOf2, true);
+	@Override
+	public Set<? extends State> getStates() {
+		return states; 
 	}
-	
-	/**
+	@Override
+	public Set<? extends State> getFinalStates() {
+		return finalState; //sk
+	}
+	@Override
+	public State getStartState() {
+		return startState;  //sk
+	}
+	@Override
+	public Set<Character> getABC() {
+		return alphabet;
+	}
+
+/**
 	 * Check if a state with such name already exists
 	 * @param name
 	 * @return null if no state exist, or DFAState object otherwise.
@@ -90,84 +242,7 @@ public class NFA implements NFAInterface{
 		}
 		return ret;
 	}
-		
-	public Set<NFAState> eClosure(NFAState s){
-		//This method will take care of epsilon enclosures.
-		//implement using depth first search algorithm.
-
-		trans.put(s.getName(), s); // You can't add you have to put because it is a map 
-		//trans.put(key, s);//what is key? 
-		for (int i = 0; i <= states.size(); i++) {
-		
-			if(!e_close.contains(s)) {
-				trans.put(s.getName(), s);// Same comment as above you need to put not add 
-			}
-		}
-		
-		return e_close;
-
-	}
-	public DFA getDFA() {
-		// TODO Auto-generated method stub
-		// Must implement the breadth first search algorithm.
-		Queue<DFAState> queue = new LinkedList<DFAState>();
-		DFAState temp = null;
-		NFAState nfa_temp = null;
-		
-		while(!queue.isEmpty()) {
-			queue.poll();
-			
-			for(int i = 0; i<queue.size(); i++) {
-				if(temp.equals(nfa_temp)) {
-					queue.add(temp);
-				}
-			}
-		}
-	
-		
-				
-		return null;
-		//return DFA; //sk
-	}
-
-	@Override
-	public Set<? extends State> getStates() {
-		return states; 
-	}
-
-	@Override
-	public Set<? extends State> getFinalStates() {
-		return finalState; //sk
-	}
-
-	@Override
-	public State getStartState() {
-		return startState;  //sk
-	}
-
-	@Override
-	public Set<Character> getABC() {
-		return alphabet;
-	}
-
-	@Override
-	public Set<NFAState> getToState(NFAState from, char onSymb) {
-		// TODO Auto-generated method stub
-		
-		//Idea from the last project. 
-		if(alphabet.contains(onSymb))
-		{	
-			return (Set<NFAState>) trans.get(from);
-		}
-		else{
-			return (Set<NFAState>) from;
-		}
-		
-		
-		//return toState; //sk
-	}
-
-	public String transitionTable(){ 
+	private String transitionTable(){ 
 		
 		String transitionTable = "	";
 		char[][] matrix = new char[numStates.size()+1][alphabet.size()+1];
@@ -209,7 +284,6 @@ public class NFA implements NFAInterface{
 		return transitionTable;
 		
 	}
-	
 	public String toString() //sk
 	{
 		StringBuilder sb = new StringBuilder();

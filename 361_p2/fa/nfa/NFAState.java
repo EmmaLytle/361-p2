@@ -5,29 +5,39 @@
 
 package fa.nfa;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import fa.State;
 import fa.nfa.NFAState;
 
 public class NFAState extends State {
-	private HashMap<Character,NFAState> delta;//delta
+	private HashMap<Character,HashSet<NFAState>> delta;
+
 	private boolean isFinal;//remembers its type
-	private String name;
 
 	/******************************
 	 * Default constructor
 	 * @param name the state name
 	 ******************************/
-	public NFAState(String name, boolean isFinal){
+	
+	public NFAState(String name){
 		initDefault(name);
 		isFinal = false;
 	}
 
+	 public NFAState(String name, boolean isFinal){
+		initDefault(name);
+		this.isFinal = isFinal;
+	}
+
 	private void initDefault(String name) {
-		// TODO Auto-generated method stub
 		this.name = name;
-		delta = new HashMap<Character, NFAState>();
+		delta = new HashMap<Character,HashSet<NFAState>> ();
 	}
 	
 	/****************************************************
@@ -45,7 +55,18 @@ public class NFAState extends State {
 	 * @param toState to DFA state
 	 *****************************************************/
 	public void addTrans(char onSymb, NFAState toState) {
-		delta.put(onSymb,  toState);
+		HashSet<NFAState>temp = delta.get(onSymb);
+		if(temp == null) {
+			temp = new HashSet<NFAState>();
+		}
+		temp.add(toState);
+		
+		delta.put(onSymb,  temp);
+	}
+
+	public HashMap<Character,HashSet<NFAState>> getTrans()
+	{
+		return delta;
 	}
 	
 	/*************************************************************
@@ -54,18 +75,18 @@ public class NFAState extends State {
 	 * @param symb - the alphabet symbol
 	 * @return the new state 
 	 *************************************************************/
-	public NFAState getTo(char symb) {
-		NFAState ret = delta.get(symb);
+	public Set<NFAState> getTo(char symb) {
+
+		HashSet<NFAState> ret = delta.get(symb);
 		if(ret == null) {
 			 System.err.println("ERROR: NFAState.getTo(char symb) returns null on " + symb + " from " + name);
 			 System.exit(2);
 		}
 		return delta.get(symb);
+
 	}
 
-	public String getName() {
-		return name;
-	}
+	
 }
 
 
