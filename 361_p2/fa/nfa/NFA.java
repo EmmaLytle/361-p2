@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Queue;
 import fa.State;
 import fa.dfa.DFA;
+import fa.dfa.DFAState;
 
 
 public class NFA implements NFAInterface{
@@ -93,12 +95,12 @@ public class NFA implements NFAInterface{
 		//This method will take care of epsilon enclosures.
 		//implement using depth first search algorithm.
 
-		trans.add(s); // You can't add you have to put because it is a map 
+		trans.put(s.getName(), s); // You can't add you have to put because it is a map 
 		//trans.put(key, s);//what is key? 
 		for (int i = 0; i <= states.size(); i++) {
 		
 			if(!e_close.contains(s)) {
-				trans.add(s);// Same comment as above you need to put not add 
+				trans.put(s.getName(), s);// Same comment as above you need to put not add 
 			}
 		}
 		
@@ -107,8 +109,23 @@ public class NFA implements NFAInterface{
 	}
 	public DFA getDFA() {
 		// TODO Auto-generated method stub
+		// Must implement the breadth first search algorithm.
+		Queue<DFAState> queue = new LinkedList<DFAState>();
+		DFAState temp = null;
+		NFAState nfa_temp = null;
 		
-		 // Must implement the breadth first search algorithm.
+		while(!queue.isEmpty()) {
+			queue.poll();
+			
+			for(int i = 0; i<queue.size(); i++) {
+				if(temp.equals(nfa_temp)) {
+					queue.add(temp);
+				}
+			}
+		}
+	
+		
+				
 		return null;
 		//return DFA; //sk
 	}
