@@ -90,7 +90,7 @@ public class NFA implements NFAInterface{
 
 		DFA d = new DFA();  //Step 1.  https://www.javatpoint.com/automata-conversion-from-nfa-to-dfa
 
-		d.addStartState(startState.getName());  //Step 2.
+		d.addStartState("[" + startState.getName() + "]");  //Step 2.
 		workQueue.add(startState);
 	
 		visited2.add(startState);
@@ -110,9 +110,9 @@ public class NFA implements NFAInterface{
 					if(ns.isFinal()){
 						containsFinalState = true;
 					}
-					cn.add(ns.getName());
+					cn.add( ns.getName() );
 				}
-				String toState = String.join(",",cn);
+				String toState = "[" + String.join(",", cn )+ "]";
 				if(containsFinalState){
 					d.addFinalState(toState);
 				}else{
@@ -122,7 +122,7 @@ public class NFA implements NFAInterface{
 				
 				//d.addTransition(fromState, symb, toState);  //1, a, 2,1
 				//d.addTransition(toState, symb, toState);  //2,1, a , 2,1
-
+				
 				//Add each state to the workQueue
 				for (NFAState nfaState : delta) {
 					if(!visited2.contains(nfaState))	{
@@ -130,7 +130,7 @@ public class NFA implements NFAInterface{
 						visited2.add(nfaState);
 					}
 				}	
-
+				
 			}
 		}
 
@@ -254,8 +254,8 @@ public class NFA implements NFAInterface{
 	public String toString() //sk
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("Q = { ");
-		sb.append(getStartState().getName() + " ");
+		sb.append("Q = {  ");
+		sb.append(getStartState().getName() + "  " );
 		
 		for (State states: states) {
 			sb.append(states.getName() + " ");
