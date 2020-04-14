@@ -29,12 +29,16 @@ p2tc3.txt
 ```
 
 ## Discussion
-We implimented some of the methods exactly we did in DFA. For this project, we had a good start 
-communicating with teamates. We walked throw the project and methods to make sure everyone understand
-what methods we need to create, and what methods we could bring from the last DFA project. After 
-that we assigned ourselves to methods we have to complete. 
-We had a difficulty working on getDFA() methods that returns a DFA identical to the 
-current NFA. We spent time figuring out what we need and how to form the methods. 
+For this project, we had a good start communicating with teammates. We 
+made a group chat and everyone was quick responding to the chat answering 
+any troubles, or questions.
+We walked throw the project and methods to make sure everyone understand
+what methods we need to create, and what methods we could bring from the 
+last DFA project. After that we assigned ourselves to methods we have to 
+complete.  We had a difficulty working on getDFA() methods that return a 
+DFA identical to the current NFA. We spent time figuring out what we need 
+and how to form the methods correctly.  
+
 
 ## Sources used
 https://www.geeksforgeeks.org/hashtable-in-java/
