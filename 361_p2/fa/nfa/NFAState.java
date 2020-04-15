@@ -6,13 +6,14 @@
 package fa.nfa;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import fa.State;
 import fa.nfa.NFAState;
 
 public class NFAState extends State {
-	private HashMap<Character,LinkedHashSet<NFAState>> delta;
+	private HashMap<Character,HashSet<NFAState>> delta;
 
 	private boolean isFinal;//remembers its type
 
@@ -33,7 +34,7 @@ public class NFAState extends State {
 
 	private void initDefault(String name) {
 		this.name = name;
-		delta = new HashMap<Character,LinkedHashSet<NFAState>> ();
+		delta = new HashMap<Character,HashSet<NFAState>> ();
 	}
 	
 	/****************************************************
@@ -51,16 +52,16 @@ public class NFAState extends State {
 	 * @param toState to DFA state
 	 *****************************************************/
 	public void addTrans(char onSymb, NFAState toState) {
-		LinkedHashSet<NFAState>temp = delta.get(onSymb);
+		HashSet<NFAState>temp = delta.get(onSymb);
 		if(temp == null) {
-			temp = new LinkedHashSet<NFAState>();
+			temp = new HashSet<NFAState>();
 		}
 		temp.add(toState);
 		
 		delta.put(onSymb,  temp);
 	}
 
-	public HashMap<Character,LinkedHashSet<NFAState>> getTrans()
+	public HashMap<Character,HashSet<NFAState>> getTrans()
 	{
 		return delta;
 	}
@@ -73,7 +74,7 @@ public class NFAState extends State {
 	 *************************************************************/
 	public Set<NFAState> getTo(char symb) {
 
-		LinkedHashSet<NFAState> ret = delta.get(symb);
+		HashSet<NFAState> ret = delta.get(symb);
 		if(ret == null) {
 			 System.err.println("ERROR: NFAState.getTo(char symb) returns null on " + symb + " from " + name);
 			 System.exit(2);

@@ -2,35 +2,32 @@ package fa.nfa;
 
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 import fa.State;
 import fa.dfa.DFA;
 
+/***************************************
+ * CS 361: P2
+ * Creates an NFA then converts the NFA to DFA
+ * @Authors Emma Lytle, Irene Galca, Shinji Kasai
+ ***************************************/
 public class NFA implements NFAInterface {
 
-	private LinkedHashSet<NFAState> states;
-	private LinkedHashSet<NFAState> e_close;
+	private HashSet<NFAState> states;
 	private NFAState startState;
 	private Set<NFAState> finalState;
 	private HashSet<Character> alphabet; // Sigma
-	// private LinkedHashMap<String, NFAState> trans;// Did we want this to be a
-	// map? how do we put things on the map?
 	private ArrayList<NFAState> numStates;
-	private ArrayList<NFAState> visited;
-
+	
 	// Constructor
 	public NFA() {
 
-		states = new LinkedHashSet<NFAState>();
-		alphabet = new LinkedHashSet<Character>(); // Sigma
-		finalState = new LinkedHashSet<NFAState>();
+		states = new HashSet<NFAState>();
+		alphabet = new HashSet<Character>(); // Sigma
+		finalState = new HashSet<NFAState>();
 		numStates = new ArrayList<NFAState>();
-		visited = new ArrayList<NFAState>();
-		e_close = new LinkedHashSet<NFAState>();
 	}
 
 	@Override
@@ -55,12 +52,12 @@ public class NFA implements NFAInterface {
 
 	@Override
 	public Set<NFAState> eClosure(NFAState s) {
-		Set<NFAState> l = new LinkedHashSet<>();
+		Set<NFAState> l = new HashSet<>();
 		return depthFirstSearch(l, s);
 	}
 
 	private Set<NFAState> depthFirstSearch(Set<NFAState> l, NFAState s) {
-		Set<NFAState> temp = new LinkedHashSet<>();
+		Set<NFAState> temp = new HashSet<>();
 		Set<NFAState> visited = l;
 
 		temp.add(s);
