@@ -1,17 +1,16 @@
-/***************************************
- * CS 361: P2
- * @Authors Emma Lytle, Irene Galca
- ***************************************/
-
 package fa.nfa;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import fa.State;
 import fa.nfa.NFAState;
 
+/***************************************
+ * CS 361: P2
+ * Defines what a NFAState is as well as extends State.
+ * @Authors Emma Lytle, Irene Galca, Shinji Kasai
+ ***************************************/
 public class NFAState extends State {
 	private HashMap<Character,HashSet<NFAState>> delta;
 
@@ -44,7 +43,6 @@ public class NFAState extends State {
 	public boolean isFinal(){
 		return isFinal;
 	}
-	
 
 	/*****************************************************
 	 * Add the transition from <code> this </code> object
