@@ -54,44 +54,26 @@ public class NFA implements NFAInterface{
 	}
 	
 	@Override
-	public Set<NFAState> eClosure(NFAState s){
-		//This method will take care of epsilon enclosures.
-		//implement using depth first search algorithm.
+	public Set<NFAState> eClosure(NFAState s) {
+        Set<NFAState> l = new LinkedHashSet<>();
+    	return depthFirstSearch(l, s);
+    }
 
-		// e_close.add(s);
-		// if(s.getTrans().containsKey('e'))
-		// {
-		// 	Set<NFAState> eTransitions = s.getTo('e'); // get all epsilon chars
-		// 	for (NFAState n : eTransitions) {  // add all e-transitions to the set
-		// 		if (!e_close.contains(n)) {
-		// 			eClosure(n);
-		// 		}
-		// 	}
-		// }
+    private Set<NFAState> depthFirstSearch(Set<NFAState> l, NFAState s){
+        Set<NFAState> temp = new LinkedHashSet<>();
+		Set<NFAState> visited = l;
 		
-		// return e_close;
+		temp.add(s);
+		if (s.getTrans().containsKey('e')&& !visited.contains(s)){
+            visited.add(s);
+            for(NFAState n : s.getTo('e')){
+                temp.addAll(depthFirstSearch(visited, n));
+            }
+        }
+        return temp;
+    }
 
-	
 
-		Set<NFAState> stateSet = new LinkedHashSet<NFAState>();
-		Queue<NFAState> q = new LinkedList<NFAState>();
-		q.add(s);
-		stateSet.add(s);
-		while (q.size() != 0) {
-			NFAState state = q.remove();
-			if (state.getTrans().containsKey('e')) {
-				for (NFAState w : state.getTrans().get('e')) {
-					stateSet.add(w);
-					q.add(w);
-				}
-			}
-
-		}
-
-		return stateSet;
-	}
-
-   
 	
 	@Override
 	public DFA getDFA() {
