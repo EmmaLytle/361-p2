@@ -2,6 +2,7 @@ package fa.nfa;
 
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -104,7 +105,7 @@ public class NFA implements NFAInterface{
 			}
 
 			for(Character symb : getABC()){
-				Set<NFAState> setOfStateForSymb = new LinkedHashSet<NFAState>();
+				Set<NFAState> setOfStateForSymb = new HashSet<NFAState>();
 				for (NFAState v : currentNode){
 					if (v.getTrans().get(symb) != null){
 						for (NFAState t: v.getTrans().get(symb)){
