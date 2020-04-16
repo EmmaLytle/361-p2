@@ -29,7 +29,13 @@ public class NFA implements NFAInterface {
 		finalState = new HashSet<NFAState>();
 		numStates = new ArrayList<NFAState>();
 	}
-
+	
+	/**********************************************************
+	 * Adds the transition to our table of transition states
+	 * @param valueOf the value of the initial state
+	 * @param c alphabet symbol
+	 * @param valueOf2 value of state transitioned to.
+	 ***********************************************************/
 	@Override
 	public void addTransition(String fromState, char onSymb, String toState) {
 		NFAState from = checkIfExists(fromState);
@@ -49,7 +55,12 @@ public class NFA implements NFAInterface {
 			alphabet.add(onSymb);
 		}
 	}
-
+	
+	/***************************************************************
+	 * Adds the epsilon enclosure to our set of transition states
+	 * @param s The state connected by epsilon enclosure
+	 * @return set of epsilon enclosures
+	 ***************************************************************/
 	@Override
 	public Set<NFAState> eClosure(NFAState s) {
 		Set<NFAState> l = new HashSet<>();
@@ -69,7 +80,11 @@ public class NFA implements NFAInterface {
 		}
 		return temp;
 	}
-
+	
+	/*****************************************************************
+	 * gets the DFA state that corresponds with an existing NFA state
+	 * @return null
+	 *****************************************************************/
 	@Override
 	public DFA getDFA() {
 		// Must implement the breadth first search algorithm.
@@ -138,12 +153,21 @@ public class NFA implements NFAInterface {
 		}
 		return d;
 	}
-
+	
+	/**********************************************************************
+	 * Get to a specified state from a state given an alphabet symbol
+	 * @param from the NFAState to move from
+	 * @param onSymb alphabet symbol
+	 * @return from
+	 **********************************************************************/
 	@Override
 	public Set<NFAState> getToState(NFAState from, char onSymb) {
 		return from.getTo(onSymb);
 	}
-
+	/***************************************************
+	 * Should add the final state to our set of states.
+	 * @param nextToken
+	 ***************************************************/
 	@Override
 	public void addFinalState(String nextToken) {
 		NFAState fs = checkIfExists(nextToken);
@@ -155,7 +179,11 @@ public class NFA implements NFAInterface {
 			System.out.println("Error: this final state already exists.");
 		}
 	}
-
+	
+	/***************************************************
+	 * Should add the start state to our set of states
+	 * @param startStateName
+	 ***************************************************/
 	@Override
 	public void addStartState(String startStateName) {
 		NFAState s = checkIfExists(startStateName);
@@ -167,7 +195,11 @@ public class NFA implements NFAInterface {
 			System.out.println("Error: this start state already exists.");
 		}
 	}
-
+	
+	/********************************************************
+	 * Adds existing states in Automata to our set of states
+	 * @param nextToken next existing state
+	 ********************************************************/
 	@Override
 	public void addState(String nextToken) {
 		NFAState s = checkIfExists(nextToken);
@@ -177,22 +209,22 @@ public class NFA implements NFAInterface {
 			System.out.println("Error: this state already exists.");
 		}
 	}
-
+	
 	@Override
 	public Set<? extends State> getStates() {
 		return states;
 	}
-
+	
 	@Override
 	public Set<? extends State> getFinalStates() {
 		return finalState;
 	}
-
+	
 	@Override
 	public State getStartState() {
 		return startState;
 	}
-
+	
 	@Override
 	public Set<Character> getABC() {
 		return alphabet;

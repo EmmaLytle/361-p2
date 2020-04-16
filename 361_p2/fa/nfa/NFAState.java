@@ -13,7 +13,6 @@ import fa.nfa.NFAState;
  ***************************************/
 public class NFAState extends State {
 	private HashMap<Character,HashSet<NFAState>> delta;
-
 	private boolean isFinal;//remembers its type
 
 	/******************************
