@@ -1,7 +1,7 @@
 # CS 361: Project 2 (Nondeterministic Finite Automata)
 
-* Author: Irene Grace
-		: Emma Lyte
+* Author: Emma Lytle
+		: Irene Galca
 *		: Shinji Kasai
 * Class : CS361 Section 2
 * Semester: Spring 2020
@@ -9,7 +9,6 @@
 ## Overview
 
 This Java project you will implement a Java program that models a deterministic finite automaton.
-
 
 ## Compiling and Using
 
@@ -38,6 +37,11 @@ last DFA project. After that we assigned ourselves to methods we have to
 complete.  We had a difficulty working on getDFA() methods that return a 
 DFA identical to the current NFA. We spent time figuring out what we need 
 and how to form the methods correctly.  
+We had a hard time making getDFA method. It caused a problem converting
+our NFA to a DFA because it could not connecting states with transitions.
+We were able to fix our problem by ourself also, when someone had a problem 
+writing code, we made a group meeting then we foucus working on the part 
+where we struggled on. 
 
 
 ## Sources used
